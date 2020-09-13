@@ -1,6 +1,5 @@
 const express = require("express");
 const Post = require("../models/post");
-const Author = require("../models/author");
 
 const PostRouter = express.Router();
 
@@ -57,7 +56,5 @@ PostRouter.get("/", async (req, res) => {
       res.status(500).send("Internal Server Error!");
     }
   });
-
-module.exports = PostRouter;
 
 module.exports = PostRouter;
