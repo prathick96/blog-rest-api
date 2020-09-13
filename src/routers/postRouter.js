@@ -1,14 +1,10 @@
 const express = require("express");
 const Post = require("../models/post");
 const Author = require("../models/author");
+
 const PostRouter = express.Router();
 
-// /posts - GET
-// /posts/:id - GET
-// /posts - POST
-
 PostRouter.get("/", async (req, res) => {
-  // res.status(404).send("not found");
   try {
     const posts = await Post.find({}).populate("author");
     res.status(200).json({
@@ -22,7 +18,19 @@ PostRouter.get("/", async (req, res) => {
   .get("/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      const post = await Post.findById(id);
+      const post = await Post.findById(id).populate("author");
+      res.status(200).json({
+        post
+      });
+    } catch (e) {
+      console.error(e);
+      res.status(500).send("Internal Server Error!");
+    }
+  })
+  .get("/author/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const post = await Post.find({ author: id }).populate("author");
       res.status(200).json({
         post
       });
@@ -34,11 +42,13 @@ PostRouter.get("/", async (req, res) => {
   .post("/", async (req, res) => {
     try {
       const { title, content, authorId } = req.body;
+      console.log(title, content, authorId);
       const result = await new Post({
         title,
         content,
         author: authorId
-      }).save();
+      });
+      result.save();
       res.status(200).json({
         result
       });
@@ -47,5 +57,7 @@ PostRouter.get("/", async (req, res) => {
       res.status(500).send("Internal Server Error!");
     }
   });
+
+module.exports = PostRouter;
 
 module.exports = PostRouter;
