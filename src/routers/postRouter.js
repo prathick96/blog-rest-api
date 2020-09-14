@@ -29,9 +29,9 @@ PostRouter.get("/", async (req, res) => {
   .get("/author/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      const post = await Post.find({ author: id }).populate("author");
+      const posts = await Post.find({ author: id }).populate("author");
       res.status(200).json({
-        post
+        posts
       });
     } catch (e) {
       console.error(e);
